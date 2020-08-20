@@ -7,24 +7,26 @@
 int main(void)
 { DDRD = 0xFF;
 uint8_t test;
+uint8_t zaler1;
 test = 1;
-while (1){
+zaler1 = 0;
 do{
-	test++;
 	PORTD = test;
-	_delay_ms(200);
-}while (test < 255);
+	test = test *2;
+	zaler1++;
+	_delay_ms(1000);
+}while (zaler1 < 8);
 
 do{
-	test--;
-	PORTD = test;
-	_delay_ms(200);
-}while ( test > 1);	
+	test = 1;
+	zaler1 = 1;
+	
 
 
 
 
-}
+
+
 
 	
 	
