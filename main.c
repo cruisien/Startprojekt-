@@ -12,14 +12,21 @@ test = 1;
 zaler1 = 0;
 do{
 	PORTD = test;
-	test = test *2;
+	test = test * 2;
 	zaler1++;
 	_delay_ms(1000);
 }while (zaler1 < 8);
+	
+test = 1;
+zaler1 = 1;
+test = test * test + 1;
+_delay_ms(1000);
 
 do{
-	test = 1;
-	zaler1 = 1;
+	zaler1++;
+	test = test * 2;
+	
+	
 	
 
 
