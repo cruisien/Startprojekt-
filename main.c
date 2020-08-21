@@ -6,28 +6,17 @@
 
 int main(void)
 { DDRD = 0xFF;
-uint8_t test;
-uint8_t zaler1;
-test = 1;
-zaler1 = 0;
-do{
-	PORTD = test;
-	test = test * 2;
-	zaler1++;
-	_delay_ms(1000);
-}while (zaler1 < 8);
-	
-test = 1;
-zaler1 = 1;
-test = test * test + 1;
-_delay_ms(1000);
+PORTD = 0x00;
+uint8_t count;
+count = 9;
 
 do{
-	zaler1++;
-	test = test * 2;
+	if ((count == 1) || (count == 9) || (count == 10) || (count == 17) || (count == 18) || (count == 19) || (count == 25) || (count == 28) ||(count == 26) || (count == 27) || (count == 33) || (count == 34) || (count == 35) || (count == 36) || (count == 37) || (count == 41) || (count == 42) || (count == 43) || (count == 44) || (count == 45) || (count == 46) || (count == 49) || (count == 50) || (count == 51) || (count == 52) || (count == 53) || (count == 54) || (count == 55) || (count > 56)) {
+		PORTD |= (1<<PD0); }
+		else { 
+			PORTD &= (1<<PD0); }
 	
-	
-	
+	if ((count == 2) || (count == 10) || (count == 11) || (count == 18) || (count == 19) || (count == 20) || (count == 26) || (count == 27) || (count == 28) || (count == 29		
 
 
 
