@@ -4,27 +4,35 @@
 
 // Test//
 
-void LED(uint8_t nr, uint8_t status){
-PORTD |= (status<<nr);
+//MODE
+void LCE(uint8_t nr){
+ PORTC |= (nr<<0);
 }
 
-
-uint8_t state; TASTE(uint8_t nr){
-	
-	switch(nr){
-		case 0: state = PINC |= (1<<nr);
-		
-		}
-	
+//Execute
+void LCP (void){
+	PORTC |= (1<<1);
+	PORTC |= (0<<1);
 }
+
+//cursor
+void LCC (Void) {
+	PORTC |= (1<<0);
+	PORTD = 00001111;
+	PORTC |= (1<<1);
+	_delay_ms(100);
+	PORTC |= (0<<1);
+}
+	
+	
+
 
 int main(void)
 { DDRD = 0xFF;
-DDRC &= (1<<PC0)| (1<<PC1)| (1<<PC2);
+DDRC |= (1<<PC0)| (1<<PC1);
+LCC;
 
-while(1){
-TASTE(0);
-LED(state, 0);
+
 }
 		
 		
@@ -33,7 +41,7 @@ LED(state, 0);
 	
 		
 
-}//end of main
+//end of main
 
 
 
