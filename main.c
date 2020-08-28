@@ -1,115 +1,99 @@
-#include <stdlib.h>
 #include <avr/io.h>
+#define F_CPU 8000000UL
 #include <util/delay.h>
-#include <lcd.h>
-
-// Test
-
-
-
-//Execute
-void LCP(void);
-
-//reset
-void LCR(void);
-
-//initialising
-void LCC(void);
-
-//Cursor home
-void LCH(void);
-
-//Simon
-void LCSIMON(void);
-
-//output port D
-void OUTD(uint8_t BIN);
+#include <string.h>
+#include "lcd.h"
+//Test
+uint8_t FLANKE(void);
 
 
-int main(void){
-//ports enable
-DDRD = 255;
-DDRC = 3;
-PORTC = 2;
-PORTD = 0b00111000;
-LCP();
-LCC();
-LCR();
-
-PORTC = 3;
-PORTD = 0b00000001;
-LCP();
-
-LCSIMON();
-
-
-
+int main(void)
+{
 	
+	DDRD = 0b0011111;
+	PORTD = 0b0001111;
 	
-
-return 0;
-}
-
-
-
-
-//execute LCD input
-void LCP(void){
-	PORTC |= (1<<PD1);
-	_delay_ms(2);
-	PORTC &= ~(1<<PD1);
-	_delay_ms(2);
-	PORTC |= (1<<PD1);
-}
-
-//clear LCD and reset cursor
-void LCR(void){
-	PORTC &= ~(1<<0);
-	PORTD = 0b00000001;
-	LCP();
-	LCC();
-}
-
-//reset cursor
-void LCH(void){
-	PORTC &= ~(1<<0);
-	PORTD = 0b00000010;
-	LCP();
-}
-
-//initialising LCD
-void LCC(void){
-	PORTC |= (1<<PD1);
-	PORTC &= ~(1<<PD0);
-	PORTD = 0b00001111;
-	LCP();
-}
-
-//Simon		
-void LCSIMON(void){
-	PORTC = 0b11;
-	PORTD = 0b01010011;
-	LCP();
-	PORTD = 0b01101001;
-	LCP();
-	PORTD = 0b01101101;
-	LCP();
-	PORTD = 0b01101111;
-	LCP();
-	PORTD = 0b01101110;
-	LCP();
+	DDRC = 0xFF;
+	PORTC = 0x00;
+	uint8_t pegel;
+	uint8_t apegel;
+	uint16_t timecounth;
+	uint8_t timecountl;
+	timecountl = 0;
+	timecounth = 0;
+	apegel = 0;
+	pegel = 0;
 	
-}
+	lcd_init(LCD_DISP_ON);  // initialisieren
 
-//output port D
-void OUTD(uint8_t BIN){
-	PORTD = BIN;
-	LCP();
-}
-	
+    lcd_clrscr();
+    
+
+    while(1){
 		
-
-//end of main
+		
+		
+		if(PIND & (1<<PD5)){
+			pegel = 1;
+		}
+		else{
+			pegel = 0;
+		}
+		
+	
+		if(pegel > apegel){
+			apegel = 1;
+			/*if(timecountl > 200){
+			lcd_puts("H");
+		}*/
+		}
+		
+		                     //output daten bei negativer flanke
+		if(pegel < apegel){
+			apegel = 0;
+			/*lcd_clrscr();
+			lcd_count(timecounth);
+			timecounth = 0;*/
+			if(timecounth < 23000){
+			lcd_puts("0");
+			timecounth = 0;
+			}
+		else{
+			lcd_puts("1");
+			timecounth = 0;
+		}
+		}
+		
+		
+		
+		
+		
+		if(apegel == 1){
+			timecounth++;
+		}						//counter
+		/*if(apegel == 0){
+			timecountl++;
+		}*/
+		
+		if(timecounth == 65500){
+			lcd_puts("overflow");
+		}
+		
+		
+		
+		
+		
+		//end while
+		}
+	
+}
+	
+	
+			
+			
+			
+	
+	//end of main
 
 
 
