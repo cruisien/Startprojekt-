@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <avr/io.h>
 #include <util/delay.h>
+#include <lcd.h>
 
 // Test
 
@@ -26,37 +27,23 @@ void OUTD(uint8_t BIN);
 
 
 int main(void){
-//ports enable/set high
+//ports enable
 DDRD = 255;
 DDRC = 3;
-PORTD = 0xFF;
-PORTC = 0x3;
-//
-
-
-PORTC = 0;
+PORTC = 2;
+PORTD = 0b00111000;
+LCP();
 LCC();
 LCR();
 
-PORTD = 0b01000000;
+PORTC = 3;
+PORTD = 0b00000001;
 LCP();
-PORTD = 0b00001110;
-LCP();
-PORTD = 0b00010001;
-LCP();
-PORTD = 0b00001110;
-LCP();
-PORTD = 0b00000100;
-LCP();
-PORTD = 0b00011111;
-LCP();
-PORTD = 0b00000100;
-LCP();
-PORTD = 0b00001010;
-LCP();
-PORTD = 0b00010001;
-LCP();
-	
+
+LCSIMON();
+
+
+
 	
 	
 
