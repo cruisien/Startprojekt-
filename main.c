@@ -4,7 +4,7 @@
 #include <string.h>
 #include "lcd.h"
 //Test
-uint8_t FLANKE(void);
+uint8_t MIN(uint8_t SEK, uint8_t BIT);
 
 
 int main(void)
@@ -23,8 +23,8 @@ int main(void)
 	uint16_t timecountl;
 	uint16_t repcount;
 	uint8_t triger;
-	uint8_t bin;
-	bin = 0;
+	uint8_t bit;
+	bit = 0;
 	triger = 0;
 	timecountl = 0;
 	timecounth = 0;
@@ -34,11 +34,11 @@ int main(void)
 	
 	//zeit variablen
 	uint8_t sek;
-	uint8_t min;
+	uint8_t minute;
 	uint8_t hour;
 	uint16_t year;
 	sek = 0;
-	min = 0;
+	minute = 0;
 	hour = 0;
 	year = 0;
 	
@@ -69,26 +69,50 @@ int main(void)
 		
 		else{
 			pegel = 0;
-			
+		}
 			                     //output daten bei negativer flanke
 		if(pegel < apegel){
+			
 			apegel = 0;
+			if(timecounth < 23000){
+					bit = 0;
+					timecounth = 0;
+					}
+					else{
+					bit = 1;
+					timecounth = 0;
+					}
+					
+				
 			/*lcd_clrscr();
 			lcd_count(timecounth);
 			timecounth = 0;*/
 			
 			if(triger == 1){
+				if(sek == 60){
+					sek = 0;
+					}
+					
 				sek++;
-				if(timecounth < 23000){
-				bin = 0;
-				timecounth = 0;
-				}
-				else{
-				bin = 1;
-				timecounth = 0;
-				}
+					
+					
+					//Sekunden
+					lcd_clrscr();
+					lcd_count(sek);
+					lcd_puts("Sek ");
+					
+					
+					//minuten
+					if(sek == 22){
+						minute = 0;
+					}
+						minute = minute + MIN(sek, bit);
+						lcd_count(minute);
+						lcd_puts("Min\n");
+						
 				
-			}
+				
+			
 		}
 		}
 		
@@ -113,9 +137,6 @@ int main(void)
 		}
 		}
 		
-		if(timecountl == 65500){
-			lcd_puts("over");
-		}
 		
 		
 		
@@ -123,10 +144,26 @@ int main(void)
 		}
 	
 }
+
 	
-	
+//time min
+uint8_t MIN(uint8_t SEK, uint8_t BIT){
+	uint8_t VAL;
+	VAL = 0;
+	if(BIT == 1){
+	switch(SEK){
+		case 22: VAL = 1; break;
+		case 23: VAL = 2; break;
+		case 24: VAL = 4; break;
+		case 25: VAL = 8; break;
+		case 26: VAL = 10; break;
+		case 27: VAL = 20; break;
+		case 28: VAL = 40; break;
+	}}
+
+		return(VAL);
+}	
 			
 			
-			
 	
-	//end of main
+
