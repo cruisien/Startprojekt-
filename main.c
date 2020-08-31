@@ -5,7 +5,7 @@
 #include "lcd.h"
 //Test
 uint8_t MIN(uint8_t SEK, uint8_t BIT);
-
+uint8_t HOUR(uint8_t SEK, uint8_t BIT);
 
 int main(void)
 {
@@ -89,7 +89,7 @@ int main(void)
 			timecounth = 0;*/
 			
 			if(triger == 1){
-				if(sek == 60){
+				if(sek == 59){
 					sek = 0;
 					}
 					
@@ -110,7 +110,14 @@ int main(void)
 						lcd_count(minute);
 						lcd_puts("Min\n");
 						
-				
+					//Stunde
+					if(sek == 30){
+						hour = 0;
+					}
+					hour = hour + HOUR(sek, bit);
+					lcd_count(hour);
+					lcd_puts("H");	
+			
 				
 			
 		}
@@ -159,6 +166,23 @@ uint8_t MIN(uint8_t SEK, uint8_t BIT){
 		case 26: VAL = 10; break;
 		case 27: VAL = 20; break;
 		case 28: VAL = 40; break;
+	}}
+
+		return(VAL);
+}
+
+//time hour
+uint8_t HOUR(uint8_t SEK, uint8_t BIT){
+	uint8_t VAL;
+	VAL = 0;
+	if(BIT == 1){
+	switch(SEK){
+		case 30: VAL = 1; break;
+		case 31: VAL = 2; break;
+		case 32: VAL = 4; break;
+		case 33: VAL = 8; break;
+		case 34: VAL = 10; break;
+		case 35: VAL = 20; break;
 	}}
 
 		return(VAL);
