@@ -3,9 +3,14 @@
 #include <util/delay.h>
 #include <string.h>
 #include "lcd.h"
-//Test
+//zeit definierung
 uint8_t MIN(uint8_t SEK, uint8_t BIT);
 uint8_t HOUR(uint8_t SEK, uint8_t BIT);
+uint8_t DAY (uint8_t SEK, uint8_t BIT);
+uint8_t MONTH(uint8_t SEK, uint8_t BIT);
+uint8_t YEAR(uint8_t SEK, uint8_t BIT);
+uint8_t WDAY(uint8_t SEK, uint8_t BIT);
+void WDAYLCD(uint8_t DAY);
 
 int main(void)
 {
@@ -32,16 +37,35 @@ int main(void)
 	apegel = 0;
 	pegel = 0;
 	
-	//zeit variablen
+	//zeit variablenbuffer
 	uint8_t sek;
-	uint8_t minute;
-	uint8_t hour;
-	uint16_t year;
+	uint8_t bufminute;
+	uint8_t bufhour;
+	uint8_t bufday;
+	uint8_t bufmonth;
+	uint8_t bufyear;
+	uint8_t bufwekday;
+	bufwekday = 0;
+	bufyear = 0;
+	bufmonth = 0;
 	sek = 0;
-	minute = 0;
-	hour = 0;
-	year = 0;
+	bufminute = 0;
+	bufhour = 0;
+	bufday = 0;
 	
+	//zeit var rel
+	uint8_t min;
+	uint8_t hour;
+	uint8_t day;
+	uint8_t month;
+	uint8_t year;
+	uint8_t wekday;
+	min = 0;
+	hour = 0;
+	day = 0;
+	month = 0;
+	year = 0;
+	wekday = 0;
 	
 	
 	lcd_init(LCD_DISP_ON);  // initialisieren
@@ -96,39 +120,91 @@ int main(void)
 				sek++;
 					
 					
-					//Sekunden
-					lcd_clrscr();
-					lcd_count(sek);
-					lcd_puts("Sek ");
+					
+
 					
 					
 					//minuten
-					if(sek == 22){
-						minute = 0;
-					}
-						minute = minute + MIN(sek, bit);
-						lcd_count(minute);
-						lcd_puts("Min\n");
+					
+						bufminute = bufminute + MIN(sek, bit);
+					if(sek == 1){
+						min = bufminute;
+						bufminute = 0;
+					}	
 						
 					//Stunde
-					if(sek == 30){
-						hour = 0;
+					
+					bufhour = bufhour + HOUR(sek, bit);
+					if(sek == 1){
+						hour = bufhour;
+						bufhour = 0;
 					}
-					hour = hour + HOUR(sek, bit);
-					lcd_count(hour);
-					lcd_puts("H");	
+
+					
+					//monthday
+					
+					bufday = bufday + DAY(sek, bit);
+					if(sek == 1){
+						day = bufday;
+						bufday = 0;
+					}
+
 			
-				
+					//month
+					
+					bufmonth = bufmonth + MONTH(sek, bit);
+					if(sek == 1){
+						month = bufmonth;
+						bufmonth = 0;
+					}
+
+					
+					//year
+					
+					bufyear = bufyear + YEAR(sek, bit);
+					if(sek == 1){
+						year = bufyear;
+						bufyear = 0;
+					}
+					
+					//weekday
+					
+					bufwekday = bufwekday + WDAY(sek, bit);
+					if(sek == 1){
+						wekday = bufwekday;
+						bufwekday = 0;
+					}
+					
+
 			
-		}
+		
+		}//end 59triger
+		if(sek == 59){
+			triger = 0;
 		}
 		
+		//Ausgabe LCD-------------------------------------------------------------------------------------
+		lcd_clrscr();
+		lcd_puts(" ");
+		lcd_count(hour);
+		lcd_puts(":");
+		lcd_count(min);
+		lcd_puts(":");
+		lcd_count(sek);
+		lcd_puts("\n ");
+		WDAYLCD(wekday);
+		lcd_puts(" ");
+		lcd_count(day);
+		lcd_puts(".");
+		lcd_count(month);
+		lcd_puts(".20");
+		lcd_count(year);
 	
 		
 		
 		
 		
-		
+		}//end negflank datasetin/timeset/count
 		
 		if(apegel == 1){
 			timecounth++;
@@ -147,11 +223,11 @@ int main(void)
 		
 		
 		
-		//end while
-		}
+		
+		
 	
-}
-
+}//end while
+}//end main
 	
 //time min
 uint8_t MIN(uint8_t SEK, uint8_t BIT){
@@ -188,6 +264,83 @@ uint8_t HOUR(uint8_t SEK, uint8_t BIT){
 		return(VAL);
 }	
 			
-			
-	
+//date day	
+uint8_t DAY(uint8_t SEK, uint8_t BIT){
+	uint8_t VAL;
+	VAL = 0;
+	if(BIT == 1){
+	switch(SEK){
+		case 37: VAL = 1; break;
+		case 38: VAL = 2; break;
+		case 39: VAL = 4; break;
+		case 40: VAL = 8; break;
+		case 41: VAL = 10; break;
+		case 42: VAL = 20; break;
+	}}
+
+		return(VAL);
+}	
+
+// date month
+uint8_t MONTH(uint8_t SEK, uint8_t BIT){
+	uint8_t VAL;
+	VAL = 0;
+	if(BIT == 1){
+	switch(SEK){
+		case 46: VAL = 1; break;
+		case 47: VAL = 2; break;
+		case 48: VAL = 4; break;
+		case 49: VAL = 8; break;
+		case 50: VAL = 10; break;
+	}}
+
+		return(VAL);
+}	
+
+//date year
+uint8_t YEAR(uint8_t SEK, uint8_t BIT){
+	uint8_t VAL;
+	VAL = 0;
+	if(BIT == 1){
+	switch(SEK){
+		case 51: VAL = 1; break;
+		case 52: VAL = 2; break;
+		case 53: VAL = 4; break;
+		case 54: VAL = 8; break;
+		case 55: VAL = 10; break;
+		case 56: VAL = 20; break;
+		case 57: VAL = 40; break;
+		case 58: VAL = 80; break;
+	}}
+
+		return(VAL);
+}
+
+//weekday
+uint8_t WDAY(uint8_t SEK, uint8_t BIT){
+	uint8_t VAL;
+	VAL = 0;
+	if(BIT == 1){
+	switch(SEK){
+		case 43: VAL = 1; break;
+		case 44: VAL = 2; break;
+		case 45: VAL = 4; break;
+	}}
+
+		return(VAL);
+	}
+
+//weekdaylcd
+void WDAYLCD(uint8_t DAY){
+	switch(DAY){
+	case 1: lcd_puts("Mo"); break;
+	case 2: lcd_puts("Di"); break;
+	case 3: lcd_puts("Mi"); break;
+	case 4: lcd_puts("Do"); break;
+	case 5: lcd_puts("Fr"); break;
+	case 6: lcd_puts("Sa"); break;
+	case 7: lcd_puts("So"); break;
+}
+
+}
 
