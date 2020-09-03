@@ -85,16 +85,16 @@ int main(void){
 //Positive Flanke 
 		if(PIND & (1<<PD5)){
 			pegel = 1;
-			if(pegel > apegel){
-				apegel = 1;
-//ausgabe negative dauer
-				/*lcd_clrscr();			
-				lcd_count(timecountl);*/
-				timecountl = 0;
-				}
 			}
 		else{
 			pegel = 0;
+			}
+		if(pegel > apegel){
+			apegel = 1;
+//ausgabe negative dauer
+			/*lcd_clrscr();			
+			lcd_count(timecountl);*/
+			timecountl = 0;
 			}
 			
 //Negative Flanke
@@ -121,62 +121,66 @@ int main(void){
 					sek = 0;
 					}
 					sek++;
+					
 //auswertung minuten
-					if((sek < 29) | (sek > 21)){
-						bufminute = bufminute + MIN(sek, bit);
-						if(sek == 1){
-							min = bufminute;
-							bufminute = 0;
-							}
-						}	
-						
-//auswertung stunden
-					if((sek < 36) | (sek > 29)){
-						bufhour = bufhour + HOUR(sek, bit);
-						if(sek == 1){
-							hour = bufhour;
-							bufhour = 0;
-							}
-						}
-					
-//auswertung kalendertag
-					if((sek < 43) | (sek > 36)){
-						bufday = bufday + DAY(sek, bit);
-							if(sek == 1){
-								day = bufday;
-								bufday = 0;
+						if((sek < 29) | (sek > 21)){
+							bufminute = bufminute + MIN(sek, bit);
+							if(sek == 59){
+								min = bufminute;
+								bufminute = 0;
 								}
-						}
+							}	
+							
+//auswertung stunden
+						if((sek < 36) | (sek > 29)){
+							bufhour = bufhour + HOUR(sek, bit);
+							if(sek == 1){
+								hour = bufhour;
+								bufhour = 0;
+								}
+							}
+						
+//auswertung kalendertag
+						if((sek < 43) | (sek > 36)){
+							bufday = bufday + DAY(sek, bit);
+								if(sek == 1){
+									day = bufday;
+									bufday = 0;
+									}
+							}
 
-			
+				
 //auswertung monat
-					if((sek < 51) | (sek > 45)){
-						bufmonth = bufmonth + MONTH(sek, bit);
-						if(sek == 1){
-							month = bufmonth;
-							bufmonth = 0;
+						if((sek < 51) | (sek > 45)){
+							bufmonth = bufmonth + MONTH(sek, bit);
+							if(sek == 1){
+								month = bufmonth;
+								bufmonth = 0;
+								}
 							}
-						}
 
-					
+						
 // auswertung jahr	
-					if((sek < 59) | (sek > 50)){
-						bufyear = bufyear + YEAR(sek, bit);
-						if(sek == 1){
-							year = bufyear;
-							bufyear = 0;
+						if((sek < 59) | (sek > 50)){
+							bufyear = bufyear + YEAR(sek, bit);
+							if(sek == 1){
+								year = bufyear;
+								bufyear = 0;
+								}
 							}
-						}
-					
+						
 //auswertung wochentag
-					if((sek < 46) | (sek > 42)){
-						bufwekday = bufwekday + WDAY(sek, bit);
-						if(sek == 1){
-							wekday = bufwekday;
-							bufwekday = 0;
+						if((sek < 46) | (sek > 42)){
+							bufwekday = bufwekday + WDAY(sek, bit);
+							if(sek == 1){
+								wekday = bufwekday;
+								bufwekday = 0;
+								}
 							}
-						}
-					
+//reset triger -> gegen fehlende sekunden
+						if(sek == 59){
+							triger = 0;
+							}
 
 			
 		
